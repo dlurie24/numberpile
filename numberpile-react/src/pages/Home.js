@@ -2,18 +2,51 @@ import React, { useState } from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 
 const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
+  labelCol: {
+    span: 8,
+  },
+  wrapperCol: {
+    span: 16,
+  },
 };
 const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
+  wrapperCol: {
+    offset: 8,
+    span: 16,
+  },
 };
 
 export default () => {
   const [nums, setNums] = useState([]);
+  const [number, setNumber] = useState(0);
 
   const addToNums = (num) => {
-    setNums(nums.concat(num));
+    var found = false;
+    var idx = 0;
+    for (var i = 0; i < nums.length; i++) {
+      var number = nums[i];
+      if (number.number == num) {
+        found = true;
+        idx = i;
+      }
+    }
+    console.log(found);
+    if (found) {
+      var number = nums[idx];
+      var newNums = nums.slice(0, idx).concat({
+        number: num,
+        count: number.count + 1,
+      });
+      console.log(nums[idx]);
+      newNums = newNums.concat(nums.slice(idx + 1, nums.length));
+      setNums(newNums);
+    } else {
+      var newNums = nums.concat({
+        number: num,
+        count: 1,
+      });
+      setNums(newNums);
+    }
   };
 
   const onFinish = (values) => {
@@ -30,7 +63,7 @@ export default () => {
       <h1>Number Pile</h1>
       <h2>Add your number to the number pile</h2>
       {nums.map((num, i) => {
-        return <p>{num + ", "}</p>;
+        return <p>{num.number + ", " + num.count}</p>;
       })}
       <Form
         {...layout}
